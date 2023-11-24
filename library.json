@@ -1,0 +1,22 @@
+{
+    "name": "J1939",
+    "description": "A library that makes working with J1939 messages a bit easier",
+    "license": "MIT",
+    "category": "Data Processing",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/jlaustill/J1939.git"
+    },
+    "version": "1.0.0",
+    "frameworks": "*",
+    "platforms": "*",
+    "export": {
+        "include": [
+            "src",
+            "include"
+        ]
+    },
+    "headers": [
+        "J1939.h"
+    ]
+}
