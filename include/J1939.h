@@ -31,7 +31,7 @@ class J1939 {
   uint8_t getPduSpecific(uint32_t canId);
   uint8_t getPduFormat(uint32_t canId);
   uint8_t getPriority(uint32_t canId);
-  void setData(uint8_t *data);
+  void setData(uint8_t const *data);
 };
 
 #endif  // J1939_J1939_H

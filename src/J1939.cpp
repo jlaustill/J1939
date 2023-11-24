@@ -15,7 +15,7 @@ void J1939::setCanId(uint32_t _canId) {
   this->priority = getPriority(_canId);
 }
 
-void J1939::setData(uint8_t *data) {
+void J1939::setData(uint8_t const *data) {
   for (int i = 0; i < 8; i++) {
     this->data[i] = data[i];
   }

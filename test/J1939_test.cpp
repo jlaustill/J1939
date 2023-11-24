@@ -57,7 +57,7 @@ TEST(J1939, getPriority) {
 
 TEST(J1939, setData) {
     message = J1939();
-    uint8_t data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
+    uint8_t const data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
     message.setData(data);
 
     for (int i = 0; i < 8; i++) {
