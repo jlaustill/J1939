@@ -8,38 +8,38 @@
         {
             "name": "PlatformIO",
             "includePath": [
-                "/home/jlaustill/repo/J1939/include",
-                "/home/jlaustill/repo/J1939/src",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/bit-utils/include",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/bit-utils/src",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googletest",
-                "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
+                "/home/jlaustill/code/J1939/include",
+                "/home/jlaustill/code/J1939/src",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/include",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/src",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
                 ""
             ],
             "browse": {
                 "limitSymbolsToIncludedHeaders": true,
                 "path": [
-                    "/home/jlaustill/repo/J1939/include",
-                    "/home/jlaustill/repo/J1939/src",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/bit-utils/include",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/bit-utils/src",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googletest",
-                    "/home/jlaustill/repo/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
+                    "/home/jlaustill/code/J1939/include",
+                    "/home/jlaustill/code/J1939/src",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/include",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/src",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
                     ""
                 ]
             },
             "defines": [
-                "PLATFORMIO=60111",
+                "PLATFORMIO=60115",
                 "unitTesting",
                 ""
             ],
-            "cppStandard": "c++11",
+            "cppStandard": "c++14",
             "compilerPath": "/usr/bin/gcc",
             "compilerArgs": [
                 ""
