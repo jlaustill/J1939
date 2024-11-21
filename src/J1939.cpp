@@ -7,7 +7,7 @@
 #include <SeaDash.hpp>
 
 void J1939::setCanId(uint32_t _canId) {
-  this->canId = SeaDash::Bits::setNBitsAt<uint32_t>(_canId, 0, 29, 3);
+  this->canId = _canId;
   this->sourceAddress = getSourceAddress(_canId);
   this->pgn = getPgn(_canId);
   this->pduSpecific = getPduSpecific(_canId);

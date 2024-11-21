@@ -10,7 +10,7 @@
 class J1939 {
  public:
   J1939() {
-    canId = 0;
+    canId = 2147483648; // 0b10000000000000000000000000000000
     sourceAddress = 0;
     pgn = 0;
     pduFormat = 0;

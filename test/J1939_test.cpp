@@ -2,22 +2,33 @@
 #include <gtest/gtest.h>
 
 J1939 message;
-uint32_t canId = 217056001;
-uint16_t pgn = 61443;
-uint8_t pduSpecific = 3;
-uint8_t pduFormat = 240;
+uint32_t canId = 2364145912;
+uint16_t pgn = 59904;
+uint8_t pduSpecific = 0;
+uint8_t pduFormat = 234;
 uint8_t priority = 3;
+uint8_t sourceAddress = 248;
 
 TEST(J1939, setCanId) {
   message = J1939();
   message.setCanId(canId);
-
+  
   EXPECT_EQ(message.canId, canId);
-  EXPECT_EQ(message.sourceAddress, 1);
+  EXPECT_EQ(message.sourceAddress, sourceAddress);
   EXPECT_EQ(message.pgn, pgn);
   EXPECT_EQ(message.pduSpecific, pduSpecific);
   EXPECT_EQ(message.pduFormat, pduFormat);
   EXPECT_EQ(message.priority, priority);
+}
+
+TEST(J1939, setAllGetCanId) {
+  message = J1939();
+
+  message.setPgn(pgn);
+  message.setPriority(priority);
+  message.setSourceAddress(sourceAddress);
+
+  EXPECT_EQ(message.canId, canId);
 }
 
 TEST(J1939, getSourceAddress) {
@@ -171,7 +182,7 @@ TEST(J1939, setPduFormat_UpdateCanId) {
   message.setPduFormat(0xAA);
 
   EXPECT_EQ(message.pduFormat, 0xAA);
-  EXPECT_EQ((message.canId >> 16) & 0xFF, 0xAA);
+  EXPECT_EQ(message.getPduFormat(message.canId), 0xAA);
 }
 
 TEST(J1939, setPriority_UpdateCanId) {
@@ -219,5 +230,5 @@ TEST(J1939, ModifyFieldIntegrity) {
   message.setPriority(6);
 
   EXPECT_EQ(message.pduSpecific,
-            originalPduSpecific);  // Ensure other fields remain unchanged
+               originalPduSpecific);  // Ensure other fields remain unchanged
 }
