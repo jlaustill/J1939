@@ -12,6 +12,11 @@
                 "/home/jlaustill/code/J1939/src",
                 "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/include",
                 "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/src",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest",
+                "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
                 ""
             ],
             "browse": {
@@ -21,6 +26,11 @@
                     "/home/jlaustill/code/J1939/src",
                     "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/include",
                     "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/sea-dash/src",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googlemock/include",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest",
+                    "/home/jlaustill/code/J1939/.pio/libdeps/latest_stable/googletest/googletest/include",
                     ""
                 ]
             },
@@ -29,7 +39,8 @@
                 "unitTesting",
                 ""
             ],
-            "compilerPath": "gcc",
+            "cppStandard": "c++14",
+            "compilerPath": "/usr/bin/gcc",
             "compilerArgs": [
                 ""
             ]

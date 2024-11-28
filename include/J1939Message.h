@@ -2,21 +2,22 @@
 // Created by jlaustill on 11/23/23.
 //
 
-#ifndef J1939_J1939_H
-#define J1939_J1939_H
+#ifndef J1939_J1939_MESSAGE_H
+#define J1939_J1939_MESSAGE_H
 
 #include <cstdint>
 
-class J1939 {
- public:
-  J1939() {
-    canId = 2147483648; // 0b10000000000000000000000000000000
-    sourceAddress = 0;
-    pgn = 0;
-    pduFormat = 0;
-    pduSpecific = 0;
-    priority = 0;
-  }
+class J1939Message
+{
+public:
+  J1939Message() : canId(0b10000000000000000000000000000000),
+            sourceAddress(0),
+            pgn(0),
+            pduFormat(0),
+            pduSpecific(0),
+            priority(0),
+            data{0xFF, 0xFF, 0xFF, 0xFF,
+                 0xFF, 0xFF, 0xFF, 0xFF} {}
   uint32_t canId;
   uint8_t sourceAddress;
   uint16_t pgn;
@@ -26,7 +27,7 @@ class J1939 {
   uint8_t data[8];
 
   void setCanId(uint32_t _canId);
-  
+
   uint8_t getSourceAddress(uint32_t canId);
   uint16_t getPgn(uint32_t canId);
   uint8_t getPduSpecific(uint32_t canId);
@@ -42,4 +43,4 @@ class J1939 {
   uint32_t setPriority(uint8_t priority);
 };
 
-#endif  // J1939_J1939_H
+#endif // J1939_J1939_MESSAGE_H
