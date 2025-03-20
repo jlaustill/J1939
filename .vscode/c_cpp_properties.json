@@ -35,7 +35,7 @@
                 ]
             },
             "defines": [
-                "PLATFORMIO=60116",
+                "PLATFORMIO=60118",
                 "unitTesting",
                 ""
             ],

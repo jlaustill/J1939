@@ -7,7 +7,7 @@
         "type": "git",
         "url": "https://github.com/jlaustill/J1939.git"
     },
-    "version": "1.0.6",
+    "version": "1.0.7",
     "frameworks": "*",
     "platforms": "*",
     "export": {
