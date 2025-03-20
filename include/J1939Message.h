@@ -21,8 +21,8 @@ public:
   uint32_t canId;
   uint8_t sourceAddress;
   uint16_t pgn;
-  uint8_t pduSpecific;
   uint8_t pduFormat;
+  uint8_t pduSpecific;
   uint8_t priority;
   uint8_t data[8];
 
