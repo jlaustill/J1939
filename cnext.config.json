@@ -1,0 +1,5 @@
+{
+    "noCache": true,
+    "headerOut": "include",
+    "basePath": "src"
+}

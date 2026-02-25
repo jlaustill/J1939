@@ -1,0 +1,100 @@
+struct J1939Message {
+    u32 canId;
+    u8 sourceAddress;
+    u16 pgn;
+    u8 pduFormat;
+    u8 pduSpecific;
+    u8 priority;
+    u8[8] data;
+}
+
+scope J1939 {
+    public void init(J1939Message msg) {
+        msg.canId <- 0x80000000;
+        msg.sourceAddress <- 0;
+        msg.pgn <- 0;
+        msg.pduFormat <- 0;
+        msg.pduSpecific <- 0;
+        msg.priority <- 0;
+        for (u8 i <- 0; i < 8; i +<- 1) {
+            msg.data[i] <- 0xFF;
+        }
+    }
+
+    public void setCanId(J1939Message msg, u32 canId) {
+        msg.canId <- canId;
+        msg.sourceAddress <- canId[0, 8];
+        msg.pgn <- canId[8, 16];
+        msg.pduSpecific <- canId[8, 8];
+        msg.pduFormat <- canId[16, 8];
+        msg.priority <- canId[26, 3];
+    }
+
+    public void setData(J1939Message msg, u8[8] data) {
+        for (u8 i <- 0; i < 8; i +<- 1) {
+            msg.data[i] <- data[i];
+        }
+    }
+
+    public u8 getSourceAddress(u32 canId) {
+        return canId[0, 8];
+    }
+
+    public u32 setSourceAddress(J1939Message msg, u8 sourceAddress) {
+        msg.sourceAddress <- sourceAddress;
+        u32 id <- msg.canId;
+        id[0, 8] <- sourceAddress;
+        msg.canId <- id;
+        return msg.canId;
+    }
+
+    public u16 getPgn(u32 canId) {
+        return canId[8, 16];
+    }
+
+    public u32 setPgn(J1939Message msg, u16 pgn) {
+        msg.pgn <- pgn;
+        msg.pduSpecific <- pgn[0, 8];
+        msg.pduFormat <- pgn[8, 8];
+        u32 id <- msg.canId;
+        id[8, 16] <- pgn;
+        msg.canId <- id;
+        return msg.canId;
+    }
+
+    public u8 getPduSpecific(u32 canId) {
+        return canId[8, 8];
+    }
+
+    public u32 setPduSpecific(J1939Message msg, u8 pduSpecific) {
+        msg.pduSpecific <- pduSpecific;
+        u32 id <- msg.canId;
+        id[8, 8] <- pduSpecific;
+        msg.canId <- id;
+        return msg.canId;
+    }
+
+    public u8 getPduFormat(u32 canId) {
+        return canId[16, 8];
+    }
+
+    public u32 setPduFormat(J1939Message msg, u8 pduFormat) {
+        msg.pduFormat <- pduFormat;
+        u32 id <- msg.canId;
+        id[16, 8] <- pduFormat;
+        msg.canId <- id;
+        return msg.canId;
+    }
+
+    public u8 getPriority(u32 canId) {
+        return canId[26, 3];
+    }
+
+    public u32 setPriority(J1939Message msg, u8 priority) {
+        msg.priority <- priority;
+        u32 id <- msg.canId;
+        id[26, 3] <- priority;
+        msg.canId <- id;
+        return msg.canId;
+    }
+}

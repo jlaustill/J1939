@@ -3,7 +3,10 @@
 # Ensure we're using bash
 set -e  # Exit on any error
 
-# Build and test first
+# Transpile C-Next source to C
+cnext src/J1939Message.cnx
+
+# Build and test
 pio test
 
 # If tests pass, publish

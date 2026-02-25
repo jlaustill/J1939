@@ -7,7 +7,7 @@
         "type": "git",
         "url": "https://github.com/jlaustill/J1939.git"
     },
-    "version": "1.0.7",
+    "version": "2.0.0",
     "frameworks": "*",
     "platforms": "*",
     "export": {
@@ -17,6 +17,6 @@
         ]
     },
     "headers": [
-        "J1939.h"
+        "J1939Message.h"
     ]
 }

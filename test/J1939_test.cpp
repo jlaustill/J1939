@@ -10,9 +10,9 @@ uint8_t priority = 3;
 uint8_t sourceAddress = 248;
 
 TEST(J1939Message, setCanId) {
-  message = J1939Message();
-  message.setCanId(canId);
-  
+  J1939_init(&message);
+  J1939_setCanId(&message, canId);
+
   EXPECT_EQ(message.canId, canId);
   EXPECT_EQ(message.sourceAddress, sourceAddress);
   EXPECT_EQ(message.pgn, pgn);
@@ -22,54 +22,54 @@ TEST(J1939Message, setCanId) {
 }
 
 TEST(J1939Message, setAllGetCanId) {
-  message = J1939Message();
+  J1939_init(&message);
 
-  message.setPgn(pgn);
-  message.setPriority(priority);
-  message.setSourceAddress(sourceAddress);
+  J1939_setPgn(&message, pgn);
+  J1939_setPriority(&message, priority);
+  J1939_setSourceAddress(&message, sourceAddress);
 
   EXPECT_EQ(message.canId, canId);
 }
 
 TEST(J1939Message, getSourceAddress) {
-  message = J1939Message();
-  uint8_t result = message.getSourceAddress(0b100000000000010101010);
+  J1939_init(&message);
+  uint8_t result = J1939_getSourceAddress(0b100000000000010101010);
 
   EXPECT_EQ(result, 0b10101010);
 }
 
 TEST(J1939Message, getGgn) {
-  message = J1939Message();
-  uint16_t result = message.getPgn(canId);
+  J1939_init(&message);
+  uint16_t result = J1939_getPgn(canId);
 
   EXPECT_EQ(result, pgn);
 }
 
 TEST(J1939Message, getPduSpecific) {
-  message = J1939Message();
-  uint8_t result = message.getPduSpecific(canId);
+  J1939_init(&message);
+  uint8_t result = J1939_getPduSpecific(canId);
 
   EXPECT_EQ(result, pduSpecific);
 }
 
 TEST(J1939Message, getPduFormat) {
-  message = J1939Message();
-  uint8_t result = message.getPduFormat(canId);
+  J1939_init(&message);
+  uint8_t result = J1939_getPduFormat(canId);
 
   EXPECT_EQ(result, pduFormat);
 }
 
 TEST(J1939Message, getPriority) {
-  message = J1939Message();
-  uint8_t result = message.getPriority(canId);
+  J1939_init(&message);
+  uint8_t result = J1939_getPriority(canId);
 
   EXPECT_EQ(result, priority);
 }
 
 TEST(J1939Message, setData) {
-  message = J1939Message();
+  J1939_init(&message);
   uint8_t const data[8] = {1, 2, 3, 4, 5, 6, 7, 8};
-  message.setData(data);
+  J1939_setData(&message, data);
 
   for (int i = 0; i < 8; i++) {
     EXPECT_EQ(message.data[i], data[i]);
@@ -77,24 +77,24 @@ TEST(J1939Message, setData) {
 }
 
 TEST(J1939Message, setPgn) {
-  message = J1939Message();
-  message.setCanId(0);
-  EXPECT_EQ(message.canId, 0);
-  message.setPgn(59905);
+  J1939_init(&message);
+  J1939_setCanId(&message, 0);
+  EXPECT_EQ(message.canId, (uint32_t)0);
+  J1939_setPgn(&message, 59905);
   EXPECT_EQ(message.pgn, 59905);
   EXPECT_EQ(message.pduSpecific, 1);
   EXPECT_EQ(message.pduFormat, 234);
-  message.setPriority(6);
+  J1939_setPriority(&message, 6);
   EXPECT_EQ(message.priority, 6);
-  message.setSourceAddress(254);
+  J1939_setSourceAddress(&message, 254);
   EXPECT_EQ(message.sourceAddress, 254);
-  EXPECT_EQ(message.canId, 417989118);
+  EXPECT_EQ(message.canId, (uint32_t)417989118);
 }
 
 TEST(J1939Message, setCanId_MaxValue) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t maxCanId = 0x1FFFFFFF;  // Max 29-bit CAN ID
-  message.setCanId(maxCanId);
+  J1939_setCanId(&message, maxCanId);
   EXPECT_EQ(message.priority, 7);
   EXPECT_EQ(message.pgn, 65535);
   EXPECT_EQ(message.pduFormat, 255);
@@ -103,9 +103,9 @@ TEST(J1939Message, setCanId_MaxValue) {
 }
 
 TEST(J1939Message, setCanId_MinValue) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t minCanId = 0;  // Min CAN ID
-  message.setCanId(minCanId);
+  J1939_setCanId(&message, minCanId);
 
   EXPECT_EQ(message.canId, minCanId);
   EXPECT_EQ(message.sourceAddress, 0);
@@ -116,88 +116,88 @@ TEST(J1939Message, setCanId_MinValue) {
 }
 
 TEST(J1939Message, getSourceAddress_EdgeCase) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t canId = 0xFFFFFFFF;  // All bits set
-  uint8_t result = message.getSourceAddress(canId);
+  uint8_t result = J1939_getSourceAddress(canId);
 
   EXPECT_EQ(result, 0xFF);  // Expecting the last 8 bits
 }
 
 TEST(J1939Message, getPgn_EdgeCase) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t canId = 0xFFFFFFFF;  // All bits set
-  uint16_t result = message.getPgn(canId);
+  uint16_t result = J1939_getPgn(canId);
 
   EXPECT_EQ(result, 0xFFFF);  // Expecting the middle 16 bits
 }
 
 TEST(J1939Message, getPduSpecific_EdgeCase) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t canId = 0xFFFFFFFF;  // All bits set
-  uint8_t result = message.getPduSpecific(canId);
+  uint8_t result = J1939_getPduSpecific(canId);
 
   EXPECT_EQ(result, 0xFF);  // Expecting the 8 bits starting from bit 8
 }
 
 TEST(J1939Message, getPduFormat_EdgeCase) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t canId = 0xFFFFFFFF;  // All bits set
-  uint8_t result = message.getPduFormat(canId);
+  uint8_t result = J1939_getPduFormat(canId);
 
   EXPECT_EQ(result, 0xFF);  // Expecting the 8 bits starting from bit 16
 }
 
 TEST(J1939Message, getPriority_EdgeCase) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t canId = 0xFFFFFFFF;  // All bits set
-  uint8_t result = message.getPriority(canId);
+  uint8_t result = J1939_getPriority(canId);
 
   EXPECT_EQ(result, 0x07);  // Expecting the 3 bits starting from bit 26
 }
 
 TEST(J1939Message, setSourceAddress_UpdateCanId) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t initialCanId = 0x1FFFFF00;
-  message.setCanId(initialCanId);
-  message.setSourceAddress(0xAA);
+  J1939_setCanId(&message, initialCanId);
+  J1939_setSourceAddress(&message, 0xAA);
 
   EXPECT_EQ(message.sourceAddress, 0xAA);
   EXPECT_EQ(message.canId & 0xFF, 0xAA);
 }
 
 TEST(J1939Message, setPduSpecific_UpdateCanId) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t initialCanId = 0x1FF000FF;
-  message.setCanId(initialCanId);
-  message.setPduSpecific(0xAA);
+  J1939_setCanId(&message, initialCanId);
+  J1939_setPduSpecific(&message, 0xAA);
 
   EXPECT_EQ(message.pduSpecific, 0xAA);
   EXPECT_EQ((message.canId >> 8) & 0xFF, 0xAA);
 }
 
 TEST(J1939Message, setPduFormat_UpdateCanId) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t initialCanId = 0x1F00FFFF;
-  message.setCanId(initialCanId);
-  message.setPduFormat(0xAA);
+  J1939_setCanId(&message, initialCanId);
+  J1939_setPduFormat(&message, 0xAA);
 
   EXPECT_EQ(message.pduFormat, 0xAA);
-  EXPECT_EQ(message.getPduFormat(message.canId), 0xAA);
+  EXPECT_EQ(J1939_getPduFormat(message.canId), 0xAA);
 }
 
 TEST(J1939Message, setPriority_UpdateCanId) {
-  message = J1939Message();
+  J1939_init(&message);
   uint32_t initialCanId = 0xE000000;
-  message.setCanId(initialCanId);
-  message.setPriority(0x7);
+  J1939_setCanId(&message, initialCanId);
+  J1939_setPriority(&message, 0x7);
 
   EXPECT_EQ(message.priority, 0x7);
   EXPECT_EQ((message.canId >> 26) & 0x7, 0x7);
 }
 
 TEST(J1939Message, CopyConstructor) {
-  message = J1939Message();
-  message.setCanId(canId);
+  J1939_init(&message);
+  J1939_setCanId(&message, canId);
   J1939Message copiedMessage = message;
 
   EXPECT_EQ(copiedMessage.canId, message.canId);
@@ -209,8 +209,8 @@ TEST(J1939Message, CopyConstructor) {
 }
 
 TEST(J1939Message, AssignmentOperator) {
-  message = J1939Message();
-  message.setCanId(canId);
+  J1939_init(&message);
+  J1939_setCanId(&message, canId);
   J1939Message assignedMessage;
   assignedMessage = message;
 
@@ -223,11 +223,11 @@ TEST(J1939Message, AssignmentOperator) {
 }
 
 TEST(J1939Message, ModifyFieldIntegrity) {
-  message = J1939Message();
-  message.setCanId(canId);
+  J1939_init(&message);
+  J1939_setCanId(&message, canId);
 
   uint8_t originalPduSpecific = message.pduSpecific;
-  message.setPriority(6);
+  J1939_setPriority(&message, 6);
 
   EXPECT_EQ(message.pduSpecific,
                originalPduSpecific);  // Ensure other fields remain unchanged
