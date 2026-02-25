@@ -20,59 +20,62 @@ Copy `include/J1939Message.h` and `src/J1939Message.c` into your project.
 
 ### Parsing a received CAN message
 
-```c
-#include <J1939Message.h>
+```cnx
+#include "J1939Message.cnx"
 
 J1939Message msg;
-J1939_init(&msg);
+J1939.init(msg);
 
 // Received CAN ID from bus
-uint32_t canId = 0x18EA00F8; // PGN 59904, Priority 6, SA 248
-J1939_setCanId(&msg, canId);
+u32 canId <- 0x18EA00F8; // PGN 59904, Priority 6, SA 248
+J1939.setCanId(msg, canId);
 
 // All fields are now decomposed
-printf("Priority: %u\n", msg.priority);       // 6
-printf("PGN: %u\n", msg.pgn);                 // 59904
-printf("PDU Format: %u\n", msg.pduFormat);     // 234
-printf("PDU Specific: %u\n", msg.pduSpecific); // 0
-printf("Source Addr: %u\n", msg.sourceAddress); // 248
+// msg.priority       = 6
+// msg.pgn            = 59904
+// msg.pduFormat      = 234
+// msg.pduSpecific    = 0
+// msg.sourceAddress  = 248
 ```
 
 ### Constructing a message to transmit
 
-```c
+```cnx
 J1939Message msg;
-J1939_init(&msg);
+J1939.init(msg);
 
-J1939_setPgn(&msg, 59904);
-J1939_setPriority(&msg, 6);
-J1939_setSourceAddress(&msg, 248);
+u16 pgn <- 59904;
+u8 pri <- 6;
+u8 sa <- 248;
+J1939.setPgn(msg, pgn);
+J1939.setPriority(msg, pri);
+J1939.setSourceAddress(msg, sa);
 
 // msg.canId is now ready to send
-uint32_t canId = msg.canId; // 0x18EA00F8
+u32 canId <- msg.canId; // 0x18EA00F8
 
 // Set the data payload
-uint8_t data[8] = {0x00, 0xEE, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
-J1939_setData(&msg, data);
+u8[8] data <- [0x00, 0xEE, 0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF];
+J1939.setData(msg, data);
 ```
 
 ### Stateless field extraction
 
 Getters can extract fields from any CAN ID without a message struct:
 
-```c
-uint32_t canId = 0x18EA00F8;
+```cnx
+u32 canId <- 0x18EA00F8;
 
-uint8_t sa      = J1939_getSourceAddress(canId); // 248
-uint16_t pgn    = J1939_getPgn(canId);           // 59904
-uint8_t pf      = J1939_getPduFormat(canId);     // 234
-uint8_t ps      = J1939_getPduSpecific(canId);   // 0
-uint8_t pri     = J1939_getPriority(canId);      // 6
+u8 sa       <- J1939.getSourceAddress(canId); // 248
+u16 pgn     <- J1939.getPgn(canId);           // 59904
+u8 pf       <- J1939.getPduFormat(canId);     // 234
+u8 ps       <- J1939.getPduSpecific(canId);   // 0
+u8 pri      <- J1939.getPriority(canId);      // 6
 ```
 
 ### Using with C++
 
-The header includes `extern "C"` guards, so it works directly in C++:
+The generated header includes `extern "C"` guards, so it works directly in C++:
 
 ```cpp
 #include <J1939Message.h>
@@ -86,35 +89,35 @@ J1939_setCanId(&msg, 0x18EA00F8);
 
 ### Struct
 
-```c
-typedef struct J1939Message {
-    uint32_t canId;
-    uint8_t  sourceAddress;
-    uint16_t pgn;
-    uint8_t  pduFormat;
-    uint8_t  pduSpecific;
-    uint8_t  priority;
-    uint8_t  data[8];
-} J1939Message;
+```cnx
+struct J1939Message {
+    u32 canId;
+    u8 sourceAddress;
+    u16 pgn;
+    u8 pduFormat;
+    u8 pduSpecific;
+    u8 priority;
+    u8[8] data;
+}
 ```
 
 ### Functions
 
 | Function | Description |
 |----------|-------------|
-| `J1939_init(msg)` | Initialize message (canId = 0x80000000, data = 0xFF) |
-| `J1939_setCanId(msg, canId)` | Set CAN ID and decompose all fields |
-| `J1939_setData(msg, data)` | Copy 8-byte payload into message |
-| `J1939_getSourceAddress(canId)` | Extract source address (bits 0-7) |
-| `J1939_setSourceAddress(msg, sa)` | Set source address, returns updated canId |
-| `J1939_getPgn(canId)` | Extract PGN (bits 8-23) |
-| `J1939_setPgn(msg, pgn)` | Set PGN (also updates pduFormat/pduSpecific), returns updated canId |
-| `J1939_getPduFormat(canId)` | Extract PDU Format (bits 16-23) |
-| `J1939_setPduFormat(msg, pf)` | Set PDU Format, returns updated canId |
-| `J1939_getPduSpecific(canId)` | Extract PDU Specific (bits 8-15) |
-| `J1939_setPduSpecific(msg, ps)` | Set PDU Specific, returns updated canId |
-| `J1939_getPriority(canId)` | Extract priority (bits 26-28) |
-| `J1939_setPriority(msg, pri)` | Set priority, returns updated canId |
+| `J1939.init(msg)` | Initialize message (canId = 0x80000000, data = 0xFF) |
+| `J1939.setCanId(msg, canId)` | Set CAN ID and decompose all fields |
+| `J1939.setData(msg, data)` | Copy 8-byte payload into message |
+| `J1939.getSourceAddress(canId)` | Extract source address (bits 0-7) |
+| `J1939.setSourceAddress(msg, sa)` | Set source address, returns updated canId |
+| `J1939.getPgn(canId)` | Extract PGN (bits 8-23) |
+| `J1939.setPgn(msg, pgn)` | Set PGN (also updates pduFormat/pduSpecific), returns updated canId |
+| `J1939.getPduFormat(canId)` | Extract PDU Format (bits 16-23) |
+| `J1939.setPduFormat(msg, pf)` | Set PDU Format, returns updated canId |
+| `J1939.getPduSpecific(canId)` | Extract PDU Specific (bits 8-15) |
+| `J1939.setPduSpecific(msg, ps)` | Set PDU Specific, returns updated canId |
+| `J1939.getPriority(canId)` | Extract priority (bits 26-28) |
+| `J1939.setPriority(msg, pri)` | Set priority, returns updated canId |
 
 ### CAN ID Bit Layout (29-bit)
 
