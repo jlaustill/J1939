@@ -9,7 +9,7 @@ struct J1939Message {
 }
 
 scope J1939 {
-    public void init(J1939Message msg) {
+    void init(J1939Message msg) {
         msg.canId <- 0x80000000;
         msg.sourceAddress <- 0;
         msg.pgn <- 0;
@@ -21,7 +21,7 @@ scope J1939 {
         }
     }
 
-    public void setCanId(J1939Message msg, u32 canId) {
+    void setCanId(J1939Message msg, u32 canId) {
         msg.canId <- canId;
         msg.sourceAddress <- canId[0, 8];
         msg.pgn <- canId[8, 16];
@@ -30,17 +30,17 @@ scope J1939 {
         msg.priority <- canId[26, 3];
     }
 
-    public void setData(J1939Message msg, u8[8] data) {
+    void setData(J1939Message msg, u8[8] data) {
         for (u8 i <- 0; i < 8; i +<- 1) {
             msg.data[i] <- data[i];
         }
     }
 
-    public u8 getSourceAddress(u32 canId) {
+    u8 getSourceAddress(u32 canId) {
         return canId[0, 8];
     }
 
-    public u32 setSourceAddress(J1939Message msg, u8 sourceAddress) {
+    u32 setSourceAddress(J1939Message msg, u8 sourceAddress) {
         msg.sourceAddress <- sourceAddress;
         u32 id <- msg.canId;
         id[0, 8] <- sourceAddress;
@@ -48,11 +48,11 @@ scope J1939 {
         return msg.canId;
     }
 
-    public u16 getPgn(u32 canId) {
+    u16 getPgn(u32 canId) {
         return canId[8, 16];
     }
 
-    public u32 setPgn(J1939Message msg, u16 pgn) {
+    u32 setPgn(J1939Message msg, u16 pgn) {
         msg.pgn <- pgn;
         msg.pduSpecific <- pgn[0, 8];
         msg.pduFormat <- pgn[8, 8];
@@ -62,11 +62,11 @@ scope J1939 {
         return msg.canId;
     }
 
-    public u8 getPduSpecific(u32 canId) {
+    u8 getPduSpecific(u32 canId) {
         return canId[8, 8];
     }
 
-    public u32 setPduSpecific(J1939Message msg, u8 pduSpecific) {
+    u32 setPduSpecific(J1939Message msg, u8 pduSpecific) {
         msg.pduSpecific <- pduSpecific;
         u32 id <- msg.canId;
         id[8, 8] <- pduSpecific;
@@ -74,11 +74,11 @@ scope J1939 {
         return msg.canId;
     }
 
-    public u8 getPduFormat(u32 canId) {
+    u8 getPduFormat(u32 canId) {
         return canId[16, 8];
     }
 
-    public u32 setPduFormat(J1939Message msg, u8 pduFormat) {
+    u32 setPduFormat(J1939Message msg, u8 pduFormat) {
         msg.pduFormat <- pduFormat;
         u32 id <- msg.canId;
         id[16, 8] <- pduFormat;
@@ -86,11 +86,11 @@ scope J1939 {
         return msg.canId;
     }
 
-    public u8 getPriority(u32 canId) {
+    u8 getPriority(u32 canId) {
         return canId[26, 3];
     }
 
-    public u32 setPriority(J1939Message msg, u8 priority) {
+    u32 setPriority(J1939Message msg, u8 priority) {
         msg.priority <- priority;
         u32 id <- msg.canId;
         id[26, 3] <- priority;
