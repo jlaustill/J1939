@@ -1,0 +1,67 @@
+// MCU Health frame codec — Proprietary B PGN 0xFFDC (65500), broadcast @ 1 Hz.
+// Every fleet MCU (OVGT/OSSM/OCT, all Teensy 4.x) transmits this with its own
+// source address; a listener collects records keyed by SA.
+// Contract spec: ovgt docs/superpowers/specs/2026-07-06-mcu-health-j1939-pgn-design.md
+
+struct McuHealth {
+    f32 temperatureC;
+    u8  resetCause;
+    u16 bootCount;
+    u16 uptimeMinutes;
+    bool temperatureValid;
+    bool bootCountValid;
+    bool uptimeValid;
+}
+
+scope J1939McuHealth {
+    public const u16 PGN <- 0xFFDC;
+    public const u16 TRANSMIT_INTERVAL_MS <- 1000;
+
+    // Reset-cause codes (i.MX RT1062 SRSR decode; matches OVGT systemHealthLogic).
+    public const u8 RESET_UNKNOWN         <- 0;
+    public const u8 RESET_POR             <- 1;
+    public const u8 RESET_LOCKUP          <- 2;
+    public const u8 RESET_PIN             <- 3;
+    public const u8 RESET_WDOG            <- 4;
+    public const u8 RESET_WDOG3           <- 5;
+    public const u8 RESET_TEMPSENSE       <- 6;
+    public const u8 RESET_JTAG            <- 7;
+    public const u8 RESET_CSU             <- 8;
+    public const u8 RESET_NOT_IMPLEMENTED <- 0xFF;
+
+    void encode(McuHealth health, u8[8] out) {
+        // B0-1: MCU die temp, 0.03125 C/bit, offset -273, LE.
+        if (health.temperatureValid = true) {
+            u16 tempRaw <- (u16)((health.temperatureC + 273.0) * 32.0);
+            out[0] <- tempRaw[0, 8];
+            out[1] <- tempRaw[8, 8];
+        } else {
+            out[0] <- 0xFF;
+            out[1] <- 0xFF;
+        }
+
+        // B2: reset cause (u8 passthrough; 0xFF = not implemented).
+        out[2] <- health.resetCause;
+
+        // B3-4: boot count, LE.
+        if (health.bootCountValid = true) {
+            out[3] <- health.bootCount[0, 8];
+            out[4] <- health.bootCount[8, 8];
+        } else {
+            out[3] <- 0xFF;
+            out[4] <- 0xFF;
+        }
+
+        // B5-6: uptime minutes, LE.
+        if (health.uptimeValid = true) {
+            out[5] <- health.uptimeMinutes[0, 8];
+            out[6] <- health.uptimeMinutes[8, 8];
+        } else {
+            out[5] <- 0xFF;
+            out[6] <- 0xFF;
+        }
+
+        // B7: reserved.
+        out[7] <- 0xFF;
+    }
+}
