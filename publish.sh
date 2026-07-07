@@ -5,6 +5,7 @@ set -e  # Exit on any error
 
 # Transpile C-Next source to C
 cnext src/J1939Message.cnx
+cnext src/J1939McuHealth.cnx
 
 # Build and test
 pio test

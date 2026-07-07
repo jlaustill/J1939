@@ -45,6 +45,24 @@ Bits  0-7:  Source Address (SA, 8 bits)
 - `J1939_getSourceAddress(uint32_t canId)` — stateless getter (takes raw canId)
 - `J1939_setSourceAddress(J1939Message* msg, uint8_t sa)` — setter returns updated canId
 
+## MCU Health module (`J1939McuHealth`)
+
+Companion codec (`src/J1939McuHealth.cnx` → `.c`/`.h`) for a fleet-wide **MCU health
+frame**: Proprietary B **PGN `0xFFDC` (65500)**, broadcast @ 1 Hz, transmitted by every
+MCU with its own SA so a listener collects health keyed by source address.
+
+- **Struct `McuHealth`:** `temperatureC` (f32), `resetCause` (u8), `bootCount` (u16),
+  `uptimeMinutes` (u16), plus `temperatureValid`/`bootCountValid`/`uptimeValid` bools.
+- **8-byte payload (LE):** B0–1 die temp (0.03125 °C/bit, −273 off, `0xFFFF`=N/A); B2
+  reset cause (`0xFF`=not-implemented); B3–4 boot count; B5–6 uptime minutes; B7 reserved.
+- **Functions:** `J1939McuHealth_encode(const McuHealth*, uint8_t out[8])` writes the
+  sentinel for any field whose `*Valid` flag is false; `J1939McuHealth_decode(uint8_t
+  data[8], McuHealth*)` clears the flag when a field holds its sentinel (`resetCause`
+  passes through verbatim).
+- **Constants (header):** `J1939McuHealth_PGN`, `_TRANSMIT_INTERVAL_MS`, and reset-cause
+  codes `J1939McuHealth_RESET_*` (0–8, matching the i.MX RT1062 `SRSR` decode) + `_RESET_NOT_IMPLEMENTED` (`0xFF`).
+- Tests: `test/J1939McuHealth_test.cpp` (encode, decode, sentinels, round-trip).
+
 ## Dependencies
 
 - **GoogleTest** — test framework, configured via `test_framework = googletest` in platformio.ini.

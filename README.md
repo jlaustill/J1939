@@ -129,6 +129,60 @@ Bits  8-15: PDU Specific (PS, 8 bits) ─┘── PGN (16 bits)
 Bits  0-7:  Source Address (SA, 8 bits)
 ```
 
+## MCU Health Module
+
+`J1939McuHealth` is a small companion codec for a **fleet-wide MCU health frame** — a
+Proprietary B PGN (`0xFFDC` / 65500, broadcast) that every microcontroller on the bus
+transmits with its own source address, so a listener can collect one health record per
+SA. It carries MCU die temperature, reset cause, boot count, and uptime.
+
+### Payload layout (8 bytes, little-endian)
+
+| Bytes | Field | Encoding | N/A sentinel |
+|-------|-------|----------|--------------|
+| 0–1 | MCU die temp | 0.03125 °C/bit, offset −273 | `0xFFFF` |
+| 2 | Reset cause | `J1939McuHealth_RESET_*` code | `0xFF` (not implemented) |
+| 3–4 | Boot count | `uint16` | `0xFFFF` |
+| 5–6 | Uptime | `uint16` minutes | `0xFFFF` |
+| 7 | Reserved | `0xFF` | — |
+
+Each field carries its own N/A sentinel, so a controller that only knows some fields
+still emits a valid frame. Set the matching `*Valid` flag to `false` (or `resetCause` to
+`J1939McuHealth_RESET_NOT_IMPLEMENTED`) and `encode` writes the sentinel.
+
+### Encoding on a transmitter
+
+```cpp
+#include <J1939McuHealth.h>
+
+McuHealth h;
+h.temperatureC = 62.5f;   h.temperatureValid = true;
+h.resetCause   = J1939McuHealth_RESET_WDOG;
+h.bootCount    = 12;      h.bootCountValid   = true;
+h.uptimeMinutes = 340;    h.uptimeValid      = true;
+
+uint8_t data[8];
+J1939McuHealth_encode(&h, data);
+// send data on PGN J1939McuHealth_PGN, every J1939McuHealth_TRANSMIT_INTERVAL_MS ms
+```
+
+### Decoding on a listener
+
+```cpp
+uint8_t data[8] = { /* received payload for PGN 0xFFDC */ };
+McuHealth h;
+J1939McuHealth_decode(data, &h);
+
+if (h.temperatureValid) { /* h.temperatureC is the MCU die temp */ }
+// h.resetCause is passed through verbatim (0xFF = sender doesn't implement it)
+```
+
+### Reset-cause codes
+
+`RESET_UNKNOWN`=0, `RESET_POR`=1, `RESET_LOCKUP`=2, `RESET_PIN`=3, `RESET_WDOG`=4,
+`RESET_WDOG3`=5, `RESET_TEMPSENSE`=6, `RESET_JTAG`=7, `RESET_CSU`=8,
+`RESET_NOT_IMPLEMENTED`=`0xFF` (matches the Teensy i.MX RT1062 `SRSR` decode).
+
 ## License
 
 MIT
