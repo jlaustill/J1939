@@ -64,4 +64,45 @@ scope J1939McuHealth {
         // B7: reserved.
         out[7] <- 0xFF;
     }
+
+    void decode(u8[8] data, McuHealth health) {
+        // B0-1: MCU die temp. Assemble LE u16 via bit-indexing (no u8<<8).
+        u16 tempRaw <- 0;
+        tempRaw[0, 8] <- data[0];
+        tempRaw[8, 8] <- data[1];
+        if (tempRaw >= 0xFF00) {
+            health.temperatureValid <- false;
+            health.temperatureC <- 0.0;
+        } else {
+            health.temperatureValid <- true;
+            health.temperatureC <- (f32)tempRaw / 32.0 - 273.0;
+        }
+
+        // B2: reset cause, verbatim.
+        health.resetCause <- data[2];
+
+        // B3-4: boot count.
+        u16 boot <- 0;
+        boot[0, 8] <- data[3];
+        boot[8, 8] <- data[4];
+        if (boot = 0xFFFF) {
+            health.bootCountValid <- false;
+            health.bootCount <- 0;
+        } else {
+            health.bootCountValid <- true;
+            health.bootCount <- boot;
+        }
+
+        // B5-6: uptime minutes.
+        u16 up <- 0;
+        up[0, 8] <- data[5];
+        up[8, 8] <- data[6];
+        if (up = 0xFFFF) {
+            health.uptimeValid <- false;
+            health.uptimeMinutes <- 0;
+        } else {
+            health.uptimeValid <- true;
+            health.uptimeMinutes <- up;
+        }
+    }
 }

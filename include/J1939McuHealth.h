@@ -40,6 +40,7 @@ extern const uint8_t J1939McuHealth_RESET_NOT_IMPLEMENTED;
 
 /* Function prototypes */
 void J1939McuHealth_encode(const McuHealth* health, uint8_t out[8]);
+void J1939McuHealth_decode(uint8_t data[8], McuHealth* health);
 
 #ifdef __cplusplus
 }

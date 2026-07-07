@@ -57,3 +57,44 @@ TEST(J1939McuHealth, encodeSentinelsForInvalidFields) {
   EXPECT_EQ(out[6], 0xFF);
   EXPECT_EQ(out[7], 0xFF);
 }
+
+TEST(J1939McuHealth, decodeFullFrame) {
+  // Temp raw 0x29A0 (60C), wdog(4), boot 7, uptime 1000 (0x03E8), reserved 0xFF.
+  uint8_t data[8] = {0xA0, 0x29, 4, 0x07, 0x00, 0xE8, 0x03, 0xFF};
+  McuHealth h;
+  J1939McuHealth_decode(data, &h);
+
+  EXPECT_TRUE(h.temperatureValid);
+  EXPECT_NEAR(h.temperatureC, 60.0f, 0.02f);
+  EXPECT_EQ(h.resetCause, 4);
+  EXPECT_TRUE(h.bootCountValid);
+  EXPECT_EQ(h.bootCount, 7);
+  EXPECT_TRUE(h.uptimeValid);
+  EXPECT_EQ(h.uptimeMinutes, 1000);
+}
+
+TEST(J1939McuHealth, decodeSentinelsMarkInvalid) {
+  uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
+  McuHealth h;
+  J1939McuHealth_decode(data, &h);
+
+  EXPECT_FALSE(h.temperatureValid);
+  EXPECT_EQ(h.resetCause, J1939McuHealth_RESET_NOT_IMPLEMENTED);  // 0xFF passthrough
+  EXPECT_FALSE(h.bootCountValid);
+  EXPECT_FALSE(h.uptimeValid);
+}
+
+TEST(J1939McuHealth, encodeThenDecodeRoundTrip) {
+  McuHealth src = makeFull();
+  uint8_t buf[8] = {0};
+  J1939McuHealth_encode(&src, buf);
+
+  McuHealth out;
+  J1939McuHealth_decode(buf, &out);
+
+  EXPECT_TRUE(out.temperatureValid);
+  EXPECT_NEAR(out.temperatureC, src.temperatureC, 0.02f);
+  EXPECT_EQ(out.resetCause, src.resetCause);
+  EXPECT_EQ(out.bootCount, src.bootCount);
+  EXPECT_EQ(out.uptimeMinutes, src.uptimeMinutes);
+}

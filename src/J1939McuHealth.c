@@ -52,3 +52,37 @@ void J1939McuHealth_encode(const McuHealth* health, uint8_t out[8]) {
     }
     out[7] = 0xFFU;
 }
+
+void J1939McuHealth_decode(uint8_t data[8], McuHealth* health) {
+    uint16_t tempRaw = 0U;
+    tempRaw = (uint16_t)((tempRaw & ~(0xFFU << 0)) | ((data[0U] & 0xFFU) << 0));
+    tempRaw = (uint16_t)((tempRaw & ~(0xFFU << 8)) | ((data[1U] & 0xFFU) << 8));
+    if (tempRaw >= 0xFF00) {
+        health->temperatureValid = false;
+        health->temperatureC = 0.0;
+    } else {
+        health->temperatureValid = true;
+        health->temperatureC = (float)tempRaw / 32.0 - 273.0;
+    }
+    health->resetCause = data[2U];
+    uint16_t boot = 0U;
+    boot = (uint16_t)((boot & ~(0xFFU << 0)) | ((data[3U] & 0xFFU) << 0));
+    boot = (uint16_t)((boot & ~(0xFFU << 8)) | ((data[4U] & 0xFFU) << 8));
+    if (boot == 0xFFFF) {
+        health->bootCountValid = false;
+        health->bootCount = 0U;
+    } else {
+        health->bootCountValid = true;
+        health->bootCount = boot;
+    }
+    uint16_t up = 0U;
+    up = (uint16_t)((up & ~(0xFFU << 0)) | ((data[5U] & 0xFFU) << 0));
+    up = (uint16_t)((up & ~(0xFFU << 8)) | ((data[6U] & 0xFFU) << 8));
+    if (up == 0xFFFF) {
+        health->uptimeValid = false;
+        health->uptimeMinutes = 0U;
+    } else {
+        health->uptimeValid = true;
+        health->uptimeMinutes = up;
+    }
+}
