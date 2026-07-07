@@ -53,7 +53,7 @@ void J1939McuHealth_encode(const McuHealth* health, uint8_t out[8]) {
     out[7] = 0xFFU;
 }
 
-void J1939McuHealth_decode(uint8_t data[8], McuHealth* health) {
+void J1939McuHealth_decode(const uint8_t data[8], McuHealth* health) {
     uint16_t tempRaw = 0U;
     tempRaw = (uint16_t)((tempRaw & ~(0xFFU << 0)) | ((data[0U] & 0xFFU) << 0));
     tempRaw = (uint16_t)((tempRaw & ~(0xFFU << 8)) | ((data[1U] & 0xFFU) << 8));

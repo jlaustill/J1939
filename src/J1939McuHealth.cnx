@@ -65,7 +65,7 @@ scope J1939McuHealth {
         out[7] <- 0xFF;
     }
 
-    void decode(u8[8] data, McuHealth health) {
+    void decode(const u8[8] data, McuHealth health) {
         // B0-1: MCU die temp. Assemble LE u16 via bit-indexing (no u8<<8).
         u16 tempRaw <- 0;
         tempRaw[0, 8] <- data[0];

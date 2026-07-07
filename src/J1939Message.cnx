@@ -30,7 +30,7 @@ scope J1939 {
         msg.priority <- canId[26, 3];
     }
 
-    void setData(J1939Message msg, u8[8] data) {
+    void setData(J1939Message msg, const u8[8] data) {
         for (u8 i <- 0; i < 8; i +<- 1) {
             msg.data[i] <- data[i];
         }
